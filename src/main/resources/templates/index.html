@@ -1,0 +1,112 @@
+<!-- Author e076560 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Dashboard</title>
+  <link rel="stylesheet" th:href="@{/css/mini.css}">
+</head>
+
+<body>
+
+  <!-- the header starts -->
+  <header class="sticky">
+    <a href="/dashboard/index" class="logo"><img th:src="@{/images/logo.png}" alt=""></a>
+    <a href="http://jenkins/" class="button">
+      <h3>Dev_Jenkins</h3>
+    </a>
+    <a href="https://jenkins/" class="button">
+      <h3>Prod_Jenkins</h3>
+    </a>
+  </header>
+
+  <!-- form -->
+  <div class="container">
+    <form action="/dashboard/refresh">
+      <div class="section">
+        <select name="jobCategory">
+          <option th:each="category : ${T(com.saiko.config.JobCategory).values()}" th:value="${category}"
+            th:text="${category}">
+          </option>
+        </select>
+        <input type="submit" value="Refresh" class="inverse" />
+      </div>
+    </form>
+  </div>
+
+  <!-- cards start here -->
+  <div class="container">
+    <div class="row">
+      <div class="col-sm" style="text-align:center;background-color:#1abc9c;margin:4rem">
+        <div class="section">
+          <h4 class="doc">Pass</h4>
+          <h1 class="doc" th:text="${jobs?.totalPassed}">passed</h1>
+        </div>
+      </div>
+      <div class="col-sm" style="text-align:center;background-color:#e67e22;margin:4rem">
+        <div class="section">
+          <h4 class="doc">Fail</h4>
+          <h1 class="doc" th:text="${jobs?.totalFailed}">failed</h1>
+        </div>
+      </div>
+      <div class="col-sm" style="text-align:center;background-color:#3498db;margin:4rem">
+        <div class="section">
+          <h4 class="doc">Time [h:m]</h4>
+          <h1 class="doc" th:text="${jobs?.totalDuration}">duration</h1>
+        </div>
+      </div>
+      <div class="col-sm" style="text-align:center;background-color:#f1c40f;margin:4rem">
+        <div class="section">
+          <h4 class="doc">Count</h4>
+          <h1 class="doc" th:text="${jobs?.count}">count</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- table goes here -->
+  <div class="container">
+    <table class="striped">
+      <caption class="shadowed">
+        <h1>Job Stats</h1>
+      </caption>
+      <!-- thead -->
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Passed</th>
+          <th>Failed</th>
+          <th>Time Taken [h:m]</th>
+          <th>Last Built</th>
+        </tr>
+      </thead>
+      <!-- tbody -->
+      <tbody id="stats-data">
+        <tr th:each="job : ${jobs?.allJobs}">
+          <td><a th:href="${job?.url}" th:text="${job?.name}" /></td>
+          <td th:text="${job?.color}"></td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td th:text="${job?.lastBuild.durationInStr}"></td>
+          <td th:text="${job?.lastBuild.timestamp}"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- the footer -->
+  <footer class="sticky">
+    <p>&copy; MI ISS</p>
+  </footer>
+
+  <script th:src="@{/js/jquery.js}"></script>
+  <script th:src="@{/js/script.js}"></script>
+
+</body>
+
+</html>
